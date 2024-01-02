@@ -78,20 +78,22 @@
                     </td>
 
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <select name="quantity" id="quantity-{{ $value['name'] }}"
-                        onchange="updateTotal('{{ $value['name'] }}', {{ $value['price'] }})">
-                        {{ $value['quantity'] }}
-                        @for ($i = 1; $i <= 10; $i++)
-                          <option value="{{ $i }}">
-                            {{ $i }}
-                          </option>
-                        @endfor
-                      </select>
+                      <form action="{{ route('update.from.cart', $key) }}" method="POST">
+                        @csrf
+                        <select name="quantity" id="quantity" onchange="this.form.submit()">
+                          @for ($i = 1; $i <= 10; $i++)
+                            <option value="{{ $i }}" {{ $value['quantity'] == $i ? 'selected' : '' }}>
+                              {{ $i }}
+                            </option>
+                          @endfor
+                        </select>
+                      </form>
                     </td>
 
                     <td class="px-6 py-4 whitespace-nowrap">
                       <div id="total-{{ $value['name'] }}" class="text-sm text-gray-900"> $
-                        {{ $value['quantity'] * $value['price'] }} </div>
+                        {{ $value['quantity'] * $value['price'] }}
+                      </div>
                     </td>
 
                     <td class="px-6 whitespace-nowrap text-right text-sm font-medium">
@@ -115,10 +117,10 @@
   </div>
 @endsection
 
-<script>
+{{-- <script>
   function updateTotal(name, price) {
     var quantity = document.getElementById('quantity-' + name).value;
     var newTotal = quantity * price;
     document.getElementById('total-' + name).innerText = '$ ' + newTotal;
   }
-</script>
+</script> --}}

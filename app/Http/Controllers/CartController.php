@@ -19,7 +19,7 @@ class CartController extends Controller
 
         if (isset($cartItems[$id])) {
             $cartItems[$id]['quantity']++;
-        }else{
+        } else {
             $cartItems[$id] = [
                 "id" => $id,
                 "image_path" => $product->image_path,
@@ -27,21 +27,33 @@ class CartController extends Controller
                 "brand" => $product->brand,
                 "details" => $product->details,
                 "price" => $product->price,
-                "quantity" => 1
+                "quantity" => 1,
             ];
         }
         session()->put('cartItems', $cartItems);
         return redirect()->back()->with('success', 'Product added to cart successfully!');
     }
 
-    public function delete(Request $request){
-        if ($request->id){
+    public function delete(Request $request)
+    {
+        if ($request->id) {
             $cartItems = session()->get('cartItems');
-            if(isset($cartItems[$request->id])){
+            if (isset($cartItems[$request->id])) {
                 unset($cartItems[$request->id]);
                 session()->put('cartItems', $cartItems);
             }
             return redirect()->back()->with('success', 'Product deleted successfully');
         }
+    }
+
+    public function update(Request $request)
+    {
+        if ($request->id && $request->quantity) {
+            $cartItems = session()->get('cartItems');
+            $cartItems[$request->id]["quantity"] = $request->quantity;
+            session()->put('cartItems', $cartItems);
+        }
+        return redirect()->back()->with('success', 'Product updated successfully');
+
     }
 }
