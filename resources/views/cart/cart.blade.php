@@ -50,8 +50,8 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                       <div class="flex items-center">
                         <div class="flex-shrink-0 h-10 w-10">
-                          <img class="h-10 w-10 rounded-full"
-                            src="{{ asset($value['image_path']) }}" alt="{{ $value['name'] }}">
+                          <img class="h-10 w-10 rounded-full" src="{{ asset($value['image_path']) }}"
+                            alt="{{ $value['name'] }}">
                         </div>
 
                         <div class="ml-4">
@@ -78,7 +78,9 @@
                     </td>
 
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <select name="quantity" id="quantity" value="{{ $value['quantity'] }}">
+                      <select name="quantity" id="quantity-{{ $value['name'] }}"
+                        onchange="updateTotal('{{ $value['name'] }}', {{ $value['price'] }})">
+                        {{ $value['quantity'] }}
                         @for ($i = 1; $i <= 10; $i++)
                           <option value="{{ $i }}">
                             {{ $i }}
@@ -88,19 +90,21 @@
                     </td>
 
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900"> $ {{ $value['quantity'] * $value['price'] }} </div>
+                      <div id="total-{{ $value['name'] }}" class="text-sm text-gray-900"> $
+                        {{ $value['quantity'] * $value['price'] }} </div>
                     </td>
 
                     <td class="px-6 whitespace-nowrap text-right text-sm font-medium">
-                      <a href="{{ route('delete.from.cart', $key) }}" role="button" class="text-red-600 hover:text-red-900">Delete</a>
+                      <a href="{{ route('delete.from.cart', $key) }}" role="button"
+                        class="text-red-600 hover:text-red-900">Delete</a>
                     </td>
                   </tr>
                 </tbody>
               @endforeach
-              @else
+            @else
               <td align="left" colspan="3">
                 <p class="font-bold text-l text-black py-6 px-4">
-                    Shopping cart is empty.
+                  Shopping cart is empty.
                 </p>
               </td>
             @endif
@@ -110,3 +114,11 @@
     </div>
   </div>
 @endsection
+
+<script>
+  function updateTotal(name, price) {
+    var quantity = document.getElementById('quantity-' + name).value;
+    var newTotal = quantity * price;
+    document.getElementById('total-' + name).innerText = '$ ' + newTotal;
+  }
+</script>
